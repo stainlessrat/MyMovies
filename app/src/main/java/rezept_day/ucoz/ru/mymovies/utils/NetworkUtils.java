@@ -10,10 +10,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class NetworkUtils {//вся работа с сетью
 
@@ -80,9 +81,9 @@ public class NetworkUtils {//вся работа с сетью
             if(urls == null || urls.length == 0){
                 return result;
             }
-            HttpURLConnection connection = null;
+            HttpsURLConnection connection = null;
             try {
-                connection = (HttpURLConnection)urls[0].openConnection();
+                connection = (HttpsURLConnection)urls[0].openConnection();
                 InputStream inputStream = connection.getInputStream();
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader reader = new BufferedReader(inputStreamReader);
