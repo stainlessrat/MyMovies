@@ -21,6 +21,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         movies = new ArrayList<>();
     }
 
+    interface OnPosterClickListener{
+        void onPosterClick(int position);
+    }
+
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
