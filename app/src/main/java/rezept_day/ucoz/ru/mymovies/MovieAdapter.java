@@ -16,6 +16,7 @@ import rezept_day.ucoz.ru.mymovies.data.Movie;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
     private ArrayList<Movie> movies;
+    private OnPosterClickListener onPosterClickListener;
 
     public MovieAdapter(){
         movies = new ArrayList<>();
@@ -23,6 +24,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
 
     interface OnPosterClickListener{
         void onPosterClick(int position);
+    }
+
+    public void setOnPosterClickListener(OnPosterClickListener onPosterClickListener) {
+        this.onPosterClickListener = onPosterClickListener;
     }
 
     @NonNull
@@ -50,6 +55,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         public MovieViewHolder(@NonNull View itemView) {
             super(itemView);
             imageViewSmallPoster = itemView.findViewById(R.id.imageViewSmallPoster);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(onPosterClickListener != null){
+                        onPosterClickListener.onPosterClick(getAdapterPosition());
+                    }
+                }
+            });
         }
     }
 

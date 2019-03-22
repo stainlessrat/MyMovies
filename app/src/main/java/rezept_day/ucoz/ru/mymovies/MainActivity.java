@@ -47,6 +47,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         switchSort.setChecked(false);
+
+        adapter.setOnPosterClickListener(new MovieAdapter.OnPosterClickListener() {
+            @Override
+            public void onPosterClick(int position) {
+                Toast.makeText(MainActivity.this, "Clicked" + position, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initUI() {
