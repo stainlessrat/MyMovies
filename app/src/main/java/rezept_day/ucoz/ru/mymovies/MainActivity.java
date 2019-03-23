@@ -1,5 +1,9 @@
 package rezept_day.ucoz.ru.mymovies;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,7 +18,9 @@ import android.widget.Toast;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import rezept_day.ucoz.ru.mymovies.data.MainViewModel;
 import rezept_day.ucoz.ru.mymovies.data.Movie;
 import rezept_day.ucoz.ru.mymovies.utils.JSONUtils;
 import rezept_day.ucoz.ru.mymovies.utils.NetworkUtils;
@@ -27,12 +33,16 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerViewPosters;
     private MovieAdapter adapter;
 
+    private MainViewModel viewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         initUI();
+
+        viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
         adapter = new MovieAdapter();
         recyclerViewPosters.setLayoutManager(new GridLayoutManager(this, 2));
@@ -58,6 +68,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onReachEnd() {
                 Toast.makeText(MainActivity.this, "Конец списка", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        LiveData<List<Movie>> movesFromLiveData = viewModel.getMovies();
+        movesFromLiveData.observe(this, new Observer<List<Movie>>() {
+            @Override
+            public void onChanged(@Nullable List<Movie> movies) {
+                adapter.setMovies(movies);
             }
         });
     }
@@ -90,8 +108,19 @@ public class MainActivity extends AppCompatActivity {
             textViewPopularity.setTextColor(getResources().getColor(R.color.colorAccent));
             methodOfSort = NetworkUtils.POPULARITY;
         }
-        JSONObject jsonObject = NetworkUtils.getJSONFromNetwork(methodOfSort,1);
+        downloadData(methodOfSort, 1);
+    }
+
+    //метод загрузки данных
+    private void downloadData(int methodOfSort, int page){
+        JSONObject jsonObject = NetworkUtils.getJSONFromNetwork(methodOfSort, page);
         ArrayList<Movie> movies = JSONUtils.getMoviesFromJSON(jsonObject);
-        adapter.setMovies(movies);
+        if(movies != null && !movies.isEmpty()){
+            viewModel.deleteAllMovies();
+            for(Movie movie : movies){
+                viewModel.insertMovie(movie);
+            }
+        }
+        //adapter.setMovies(movies);
     }
 }

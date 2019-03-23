@@ -1,6 +1,11 @@
 package rezept_day.ucoz.ru.mymovies.data;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+
+@Entity(tableName = "movies")
 public class Movie {
+    @PrimaryKey
     private int id;
     private int voteCount;//количество голосов
     private String title;//Заголовок фильма
