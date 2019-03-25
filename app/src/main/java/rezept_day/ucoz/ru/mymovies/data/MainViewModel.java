@@ -44,7 +44,7 @@ public class MainViewModel extends AndroidViewModel {
         return null;
     }
 
-    public LiveData<List<FavouriteMovie>> getFavourite_movies() {
+    public LiveData<List<FavouriteMovie>> getFavouriteMovies() {
         return favourite_movies;
     }
 
